@@ -1,0 +1,22 @@
+{
+  "name": "cs419-backend",
+  "version": "1.0.0",
+  "description": "hapi server and api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andrew310/cs419-backend.git"
+  },
+  "author": "moonwalk dev team",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/andrew310/cs419-backend/issues"
+  },
+  "homepage": "https://github.com/andrew310/cs419-backend#readme",
+  "dependencies": {
+    "hapi": "^15.1.1"
+  }
+}
