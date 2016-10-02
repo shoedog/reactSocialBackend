@@ -4,7 +4,7 @@ const Hapi = require('hapi');
 const boomDecorators = require('hapi-boom-decorators');
 
 // Create server instance.
-const server = new Hapi.Server();
+const server = new Hapi.Server({ debug: { request: ['error'] } });
 
 const db = require('./database');
 const auth = require('./auth');
@@ -20,10 +20,9 @@ if (process.env.NODE_ENV === 'test') {
 
 const plugins = [];
 
-// Register user routes.
+// Register routes.
 plugins.push({
-	register: require('./user/userRoutes'),
-	options: {database: db}
+	register: require('./auth/authRoutes')
 });
 
 plugins.push({register: auth});

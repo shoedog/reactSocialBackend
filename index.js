@@ -2,7 +2,7 @@
 
 let server = require('./app/server');
 
-// Launch site.
+// Launch server.
 server.start((err) => {
   if (err) { throw err; }
 

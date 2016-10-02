@@ -17,6 +17,10 @@
   },
   "homepage": "https://github.com/andrew310/cs419-backend#readme",
   "dependencies": {
-    "hapi": "^15.1.1"
+    "bell": "^8.2.1",
+    "bluebird": "^3.4.6",
+    "hapi": "^15.1.1",
+    "hapi-auth-cookie": "^6.1.1",
+    "mongoose": "^4.6.2"
   }
 }

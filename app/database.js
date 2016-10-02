@@ -4,10 +4,7 @@
 const Promise = require('bluebird');
 const mongoose = require('mongoose');
 
-const db = {
-  User: Promise.promisifyAll(require('./user/userModel')),
-  Crumbtrail: Promise.promisifyAll(require('./crumbtrail/crumbtrailModel'))
-}
+const db = {}
 
 // Connect to mongo
 const dbConfig = require('../config/database.js');
