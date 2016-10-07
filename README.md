@@ -10,6 +10,25 @@ Start the server with this command:
 node index.js
 ```
 
-Navigate to localhost:8080/auth/twitter and you should be redirected to Twitter, and then redirected back and shown a JSON object with your profile.
+This is strictly an API, so no front end. Use Postman or other to test the endpoints.
 
-Nothing fancy for now, but getting something going.
+This follows the RESTful API paradigm, complete with GET, POST, PUT, DELETE commands.
+
+
+Create a user by sending a POST request containing a username and password to /user.
+You will get back BOTH a token and a user object (password stripped out for security).
+
+
+
+
+see app/user/userRoutes to see all methods and routes available.
+
+
+Testing
+---
+
+Run
+
+```
+npm test
+```
