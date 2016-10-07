@@ -4,7 +4,10 @@
   "description": "hapi server and api",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./index",
+    "test": "mocha --timeout 10000",
+    "lint": "jshint .",
+    "validate": "npm ls"
   },
   "repository": {
     "type": "git",
@@ -17,10 +20,27 @@
   },
   "homepage": "https://github.com/andrew310/cs419-backend#readme",
   "dependencies": {
-    "bell": "^8.2.1",
-    "bluebird": "^3.4.6",
-    "hapi": "^15.1.1",
-    "hapi-auth-cookie": "^6.1.1",
-    "mongoose": "^4.6.2"
+    "bcryptjs": "2.3.0",
+    "bell": "^8.3.0",
+    "bluebird": "3.0.5",
+    "boom": "2.9.0",
+    "glob": "6.0.1",
+    "good": "6.4.0",
+    "good-console": "^6.1.2",
+    "good-file": "^6.0.1",
+    "hapi": "11.1.2",
+    "hapi-auth-jwt2": "5.2.1",
+    "hapi-boom-decorators": "1.0.2",
+    "joi": "6.9.0",
+    "jsonwebtoken": "5.4.1",
+    "mongoose": "4.2.7",
+    "shortid": "2.2.4"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^3.0.0",
+    "coveralls": "2.11.4",
+    "mocha": "^3.0.2",
+    "semistandard": "7.0.3"
   }
 }

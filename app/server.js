@@ -1,50 +1,58 @@
 'use strict';
 
+const fs = require('fs');
 const Hapi = require('hapi');
 const boomDecorators = require('hapi-boom-decorators');
 
-// Create server instance.
-const server = new Hapi.Server({ debug: { request: ['error'] } });
+// initiate server
+const server = new Hapi.Server();
 
+// get our config files
 const db = require('./database');
 const auth = require('./auth');
+//const logs = require('./logs');
 
 
-// Keeping cors open since we have front end on separate server.
+// set up host and port
 server.connection({
-  port: 8080,
+  host: 'localhost',
+  port: 5000,
   routes: { cors: true }
 });
 
+// register database
 if (process.env.NODE_ENV === 'test') {
 	server.database = db;
 }
 
+// register routes
 const plugins = [];
 
-// Register routes.
 plugins.push({
-	register: require('./auth/authRoutes')
+	register: require('./user/userRoutes'),
+	options: {database: db}
 });
 
+// other plugins
 plugins.push({register: auth});
+//plugins.push({register: logs});
 plugins.push({register: boomDecorators});
 
-// If no parent, start server.
+// up and running
 server.register(plugins, (err) => {
-  if (err) {
-    throw err;
-  }
+	if (err) {
+		throw err;
+	}
 
-  if (!module.parent) {
-    server.start((err) => {
-        if (err) {
-        throw err;
-      }
+	if (!module.parent) {
+		server.start((err) => {
+			if (err) {
+				throw err;
+			}
 
-      server.log('info', 'the magic happens at: ' + server.info.url);
-    });
-  }
+			server.log('info', 'the magic happens at: ' + server.info.url);
+		});
+	}
 });
 
 module.exports = server;
