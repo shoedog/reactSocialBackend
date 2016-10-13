@@ -10,6 +10,7 @@ const server = new Hapi.Server();
 // get our config files
 const db = require('./database');
 const auth = require('./auth');
+const oauth = require('./oauth');
 //const logs = require('./logs');
 
 
@@ -33,7 +34,12 @@ plugins.push({
 	options: {database: db}
 });
 
+plugins.push({
+	register: require('./oauth/authRoutes')
+});
+
 // other plugins
+plugins.push({register: oauth});
 plugins.push({register: auth});
 //plugins.push({register: logs});
 plugins.push({register: boomDecorators});
