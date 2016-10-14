@@ -68,13 +68,14 @@ function create (req, res) {
   });
 }
 
+// [POST] /user/login
 function login (request, reply) {
   const credentials = request.payload;
 
   this.model.findOneAsync({username: credentials.username})
   .then((user) => {
 
-      // didn't find user but don't tell them that
+      // Do not specify which was incorrect (more secure this way)
       if (!user) {
         return reply.unauthorized('Username or password invalid.');
       }

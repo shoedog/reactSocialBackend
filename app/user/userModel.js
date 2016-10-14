@@ -82,7 +82,7 @@ UserSchema.pre('findOneAndUpdate', function () {
     return;
   }
 
-  this.findOneAndUpdate({}, {password: password});
+  this.findOneAndUpdate({}, {password: password, email: email});
 });
 
 // validate password

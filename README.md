@@ -27,6 +27,21 @@ docker run -p 5000:5000 moonwalk:latest
 
 The app will be running at 0.0.0.0:5000
 
+Use
+
+```
+docker stop <container id>
+```
+
+to stop the app/container. You will also want to delete the container before you build it again. This can be done by:
+
+```
+docker rm <container id>
+```
+
+use docker ps to see all running docker containers, and docker ps -a to see all
+containers that have been exited but not destroyed.
+
 
 Structure
 ---
