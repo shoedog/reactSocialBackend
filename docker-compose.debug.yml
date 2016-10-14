@@ -1,0 +1,15 @@
+version: '2'
+
+services:
+  moonwalk-api:
+    image: moonwalk:debug
+    build:
+      context: .
+      dockerfile: Dockerfile.debug
+    ports:
+      - "5000:5000"
+      - "5858:5858"
+    volumes:
+      - .:/src
+    environment:
+      - REMOTE_DEBUGGING

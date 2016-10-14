@@ -16,7 +16,6 @@ const oauth = require('./oauth');
 
 // set up host and port
 server.connection({
-  host: 'localhost',
   port: 5000,
   routes: { cors: true }
 });
