@@ -10,7 +10,7 @@ const server = new Hapi.Server();
 // get our config files
 const db = require('./database');
 const auth = require('./auth');
-//const oauth = require('./oauth');
+const oauth = require('./oauth');
 //const logs = require('./logs');
 
 
@@ -28,20 +28,23 @@ if (process.env.NODE_ENV === 'test') {
 // register routes
 const plugins = [];
 
+// other plugins
+plugins.push({register: oauth});
+plugins.push({register: auth});
+//plugins.push({register: logs});
+plugins.push({register: boomDecorators});
+
+
 plugins.push({
 	register: require('./user/userRoutes'),
 	options: {database: db}
 });
 
-// plugins.push({
-// 	register: require('./oauth/authRoutes')
-// });
+plugins.push({
+	register: require('./oauth/authRoutes')
+});
 
-// other plugins
-//plugins.push({register: oauth});
-plugins.push({register: auth});
-//plugins.push({register: logs});
-plugins.push({register: boomDecorators});
+server.auth.default('jwt');
 
 // up and running
 server.register(plugins, (err) => {

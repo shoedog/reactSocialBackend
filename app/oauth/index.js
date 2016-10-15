@@ -19,14 +19,13 @@ exports.register = (server, options, next) => {
       clientSecret: 'V11loaak55rQAtzPsyHq4HULEfbGwEzR1ZBQidvJAS5A9xqZn5', // if we ever make this repo public, DELETE THIS
       isSecure: false // So we can test without https
     });
-    server.auth.default('twitter');
 
-    return (next);
+    return next();
   }
 
 }
 
 exports.register.attributes = {
-  name: 'auth',
+  name: 'twitter',
   version: '1.0.0'
 };

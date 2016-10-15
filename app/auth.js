@@ -19,9 +19,6 @@ exports.register = (server, options, next) => {
       verifyOptions: {algorithms: [ 'HS256']}
     });
 
-    // set this strategy to default
-    server.auth.default('jwt');
-
     // move on down middleware stack
     return next();
   }

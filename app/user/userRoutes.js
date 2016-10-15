@@ -24,6 +24,9 @@ exports.register = (server, options, next) => {
       method: 'GET',
       path: '/user/{username}',
       config: {
+        auth: {
+          strategies: ['jwt', 'twitter']
+        },
         handler: controller.read,
         validate: Validator.read()
       }
