@@ -2,10 +2,11 @@
 'use strict';
 
 const Promise = require('bluebird');
-const mongoose = require('mongoose');
+const mongoose = Promise.promisifyAll(require('mongoose'));
 
 const db = {
   User: Promise.promisifyAll(require('./user/userModel')),
+  Social: Promise.promisifyAll(require('./social/socialModel'))
 }
 
 // connect to db

@@ -45,10 +45,13 @@ plugins.push({
 	register: require('./oauth/authRoutes')
 });
 
-// plugins.push({
-//   register: require('./social/socialRoutes')
-// });
+plugins.push({
+  register: require('./social/socialRoutes'),
+  options: {database: db, socialKeys: socialKeys}
+});
 
+
+// Use this auth strategy by default.
 server.auth.default('jwt');
 
 // up and running

@@ -5,29 +5,31 @@ const Controller = require('./socialController');
 exports.register = (server, options, next) => {
 
   // instantiate controller
-  const controller = new Controller();
+  const controller = new Controller(options.database, options.socialKeys);
 
   server.bind(controller);
   server.route([
     {
       method: 'GET',
-      path: '/social',
+      path: '/social/connect',
       config: {
-        auth: {
-          stragegy: 'twitter'
-        },
-        handler: controller.list,
-        validate: Validator.list()
+        auth: false,
+        handler: controller.connect
       }
     },
     {
-      method: 'POST',
+      method: 'GET',
       path: '/social/connect/twitter',
       config: {
-        auth: 'false',
-        handler: controller.read,
-        validate: Validator.read()
+        auth: 'twitter',
+        handler: controller.connectTwitter
       }
     }
   ]);
+
+};
+
+exports.register.attributes = {
+  name: 'socialRoutes',
+  version: '1.0.0'
 };

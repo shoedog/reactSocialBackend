@@ -4,12 +4,13 @@
 const bcrypt = require('bcryptjs');
 const shortid = require('shortid');
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
 const SALT_FACTOR = 10,
     MAX_LOGIN_ATTEMPTS = 6,
     LOCKOUT_TIME = 60 * 50 * 1000; // 1 hour
 
-var UserSchema = new mongoose.Schema({
+var UserSchema = new Schema({
 
   firstName: {
     type: String,
@@ -50,6 +51,8 @@ var UserSchema = new mongoose.Schema({
     unique: true,
     default: shortid.generate
   },
+
+  twitterAccount: {type : Schema.Types.ObjectId, ref : 'Social'},
 
   loginAttempts: { type: Number, required: true, default: 0},
 

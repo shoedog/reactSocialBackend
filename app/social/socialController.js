@@ -2,47 +2,74 @@
 'use strict';
 const Twit = require('twit');
 
-let T = new Twit({
-  consumer_key: 'HBTuDkqYixOZeZIP3Uupj6gMB', // assigned to app name cs419_moonwalk
-  consumer_secret: 'V11loaak55rQAtzPsyHq4HULEfbGwEzR1ZBQidvJAS5A9xqZn5', // Don't push to public repo!!
-  access_token: null,
-  access_token_secret: null,
-  timeout_ms: 60*1000
-});
-
 
 // Will add prototypes to this.
-function socialController () {
+function socialController (db, socialKeys) {
+  this.userModel = db.User;
+  this.socialModel = db.Social;
 }
 
-UserController.prototype = {
-  list,
+socialController.prototype = {
+  connect,
   connectTwitter
 };
 
-module.exports = UserController;
+module.exports = socialController;
 
-// [POST] /connect/twitter
-// function connectTwitter (req, res) {
-//
-// }
+// [GET] /social/connect
+function connect (req, res) {
 
-// [GET] /social
-// function list (req, res) {
-//   T.access_token = req.auth.credentials.token;
-//   T.access_token_secret = req.auth.credentials.secret;
-//
-//   const stream = T.stream('statuses/home_timeline');
-//
-//   stream.on('tweet', function(tweet) {
-//     console.log(tweet);
-//   })
-//
-//   let context = null;
-//
-//   T.get('statuses/home_timeline', function(err, data, response) {
-//     context = data;
-//   });
-//
-//   res(data);
-// }
+  res.redirect('/social/connect/twitter?id='+ req.query.id)
+}
+
+// [GET] /social/connect/twitter
+function connectTwitter (req, res) {
+  // Once we've made it here, we have all we need.
+  var id = req.auth.credentials.query.id;
+  //console.log(id);
+  this.userModel.findOne({_id: id}).populate('twitterAccount')
+  .execAsync()
+  .then((user) => {
+    if (!user) {
+      res("no user found");
+      return;
+    }
+
+    if (user.twitterAccount) {
+      res("You have already connected a twitter account.")
+    }
+
+    // Create a new social account mongo object
+    let s = new this.socialModel();
+    s.provider = req.auth.credentials.provider;
+    s.token = req.auth.credentials.token;
+    s.secret = req.auth.credentials.secret;
+    s.handle = req.auth.credentials.username;
+
+    // Save new object
+    s.save((err, social) => {
+      if (err) {
+        res.badImplementation(err.message);
+      }
+
+      // Once succesfully saved, push it to user document.
+      user.twitterAccount = social._id;
+
+      // Save user.
+      user.save((err, user) => {
+        if (err) {
+          res.badImplementation(err.message);
+        }
+
+        // Return so we can view.
+        res(user);
+      })
+
+    })
+
+  })
+  .catch((err) => {
+    res.badImplementation(err.message);
+  });
+
+}
