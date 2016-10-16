@@ -24,6 +24,14 @@ exports.register = (server, options, next) => {
         auth: 'twitter',
         handler: controller.connectTwitter
       }
+    },
+    {
+      method: 'GET',
+      path: '/social/feed',
+      config: {
+        auth: {strategies: ['jwt', 'twitter']},
+        handler: controller.feed
+      }
     }
   ]);
 

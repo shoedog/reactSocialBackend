@@ -7,11 +7,13 @@ const Twit = require('twit');
 function socialController (db, socialKeys) {
   this.userModel = db.User;
   this.socialModel = db.Social;
+  this.socialKeys = socialKeys;
 }
 
 socialController.prototype = {
   connect,
-  connectTwitter
+  connectTwitter,
+  feed
 };
 
 module.exports = socialController;
@@ -19,7 +21,30 @@ module.exports = socialController;
 // [GET] /social/connect
 function connect (req, res) {
 
+  // TODO: update this to work with JWT not with query params
   res.redirect('/social/connect/twitter?id='+ req.query.id)
+}
+
+// [GET] /social/feed
+function feed (req, res) {
+
+  var T = new Twit({
+    consumer_key: this.socialKeys.twitter.moonwalkId,
+    consumer_secret: this.socialKeys.twitter.moonwalkSecret,
+    access_token: req.auth.credentials.token,
+    access_token_secret: req.auth.credentials.secret,
+    timeout_ms: 60*1000,
+  });
+
+  T.get('/statuses/home_timeline', (err, data, response) => {
+    if (err) {
+      res.badImplementation(err);
+    }
+
+    res(data);
+  });
+
+
 }
 
 // [GET] /social/connect/twitter
@@ -32,7 +57,6 @@ function connectTwitter (req, res) {
   .then((user) => {
     if (!user) {
       res("no user found");
-      return;
     }
 
     if (user.twitterAccount) {

@@ -31,13 +31,18 @@ exports.register = (server, options, next) => {
 
     // find user and validate
     return new Promise((resolve) => {
-      User.findAsync({_id: decoded.id})
+      User.findOne({_id: decoded.id}).populate('twitterAccount')
+      .execAsync()
       .then((user) => {
         if (!user) {
           return next(null, false);
         }
 
-        return next(null, true);
+        var credentials = user.twitterAccount;
+        credentials.id = user._id;
+        console.log(credentials);
+
+        return next(null, true, credentials);
       });
     });
   }
