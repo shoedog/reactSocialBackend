@@ -17,6 +17,7 @@ UserController.prototype = {
   destroy
 };
 
+
 module.exports = UserController;
 
 // [GET] /user
@@ -32,6 +33,7 @@ function list (req, res) {
 
 // [GET] /user/{username}
 function read (req, res) {
+  console.log(req.auth.credentials);
   this.model.findOneAsync({username: req.params.username.toLowerCase()})
   .then((user) => {
     if (!user) {

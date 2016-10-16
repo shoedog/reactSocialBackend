@@ -1,3 +1,4 @@
+// app/oauth/index.js
 'use strict';
 
 const Promise = require('bluebird');
@@ -5,6 +6,8 @@ const db = require('../database');
 const bell = require('bell');
 
 exports.register = (server, options, next) => {
+
+  console.log(options);
 
   // Call our function to register strategies.
   server.register(bell, registerAuth);
@@ -15,8 +18,8 @@ exports.register = (server, options, next) => {
     server.auth.strategy('twitter', 'bell', {
       provider: 'twitter',
       password: 'moonwalk_encryption_secret_password',
-      clientId: 'HBTuDkqYixOZeZIP3Uupj6gMB', // assigned to app name cs419_moonwalk
-      clientSecret: 'V11loaak55rQAtzPsyHq4HULEfbGwEzR1ZBQidvJAS5A9xqZn5', // if we ever make this repo public, DELETE THIS
+      clientId: options.socialKeys.twitter.moonwalkId,
+      clientSecret: options.socialKeys.twitter.moonwalkSecret,
       isSecure: false // So we can test without https
     });
 

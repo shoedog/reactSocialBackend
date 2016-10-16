@@ -8,6 +8,7 @@ const boomDecorators = require('hapi-boom-decorators');
 const server = new Hapi.Server();
 
 // get our config files
+const socialKeys = require('../config/social');
 const db = require('./database');
 const auth = require('./auth');
 const oauth = require('./oauth');
@@ -25,16 +26,16 @@ if (process.env.NODE_ENV === 'test') {
 	server.database = db;
 }
 
-// register routes
+// register plugins
 const plugins = [];
 
 // other plugins
-plugins.push({register: oauth});
+plugins.push({register: oauth, options: {socialKeys: socialKeys}});
 plugins.push({register: auth});
 //plugins.push({register: logs});
 plugins.push({register: boomDecorators});
 
-
+// register routes
 plugins.push({
 	register: require('./user/userRoutes'),
 	options: {database: db}
@@ -43,6 +44,10 @@ plugins.push({
 plugins.push({
 	register: require('./oauth/authRoutes')
 });
+
+// plugins.push({
+//   register: require('./social/socialRoutes')
+// });
 
 server.auth.default('jwt');
 

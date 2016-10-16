@@ -34,7 +34,8 @@
     "joi": "6.9.0",
     "jsonwebtoken": "5.4.1",
     "mongoose": "4.2.7",
-    "shortid": "2.2.4"
+    "shortid": "2.2.4",
+    "twit": "^2.2.5"
   },
   "devDependencies": {
     "chai": "^3.5.0",
