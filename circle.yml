@@ -17,8 +17,8 @@ dependencies:
     # Cache" will make sure we start with a clean slate.
     - mkdir -p ~/docker
     - if [[ -e ~/docker/app.tar ]]; then docker load -i ~/docker/app.tar; fi
-    - make docker-build
-    - docker save pinnacle/app > ~/docker/app.tar
+    - npm docker-build
+    - docker save moonwalk-backend > ~/docker/app.tar
 test:
   override:
     - npm test
