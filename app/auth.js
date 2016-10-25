@@ -38,7 +38,11 @@ exports.register = (server, options, next) => {
           return next(null, false);
         }
 
-        var credentials = user.twitterAccount;
+        let credentials = {};
+        if (user.twitterAccount) {
+          let credentials = user.twitterAccount;
+        }
+
         credentials.id = user._id;
         console.log(credentials);
 
