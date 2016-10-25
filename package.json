@@ -12,11 +12,9 @@
     "start": "node ./index",
     "test": "mocha --timeout 10000",
     "validate": "npm ls",
-    "docker-build": "docker build -t moonwalk-backend . ",
-    "docker-push": "eval `aws ecr get-login --region us-west-2 --profile OSU`
-    && docker tag $npm_package_config_DOCKER_IMAGE $npm_config_AWS_REPO:$npm_config_VERSION
-    && docker push $npm_config_AWS_REPO:$npm_config_VERSION",
-    "deploy": "deploy/ecs-deploy.sh app app-service $(DOCKER_DEPLOY_IMAGE):$(CURRENT_VERSION)"
+    "build": "make docker-build",
+    "push": "make docker-push",
+    "deploy": "make deploy"
   },
   "repository": {
     "type": "git",
