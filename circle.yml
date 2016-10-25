@@ -17,7 +17,7 @@ dependencies:
     # Cache" will make sure we start with a clean slate.
     - mkdir -p ~/docker
     - if [[ -e ~/docker/app.tar ]]; then docker load -i ~/docker/app.tar; fi
-    - npm docker-build
+    - npm run docker-build
     - docker save moonwalk-backend > ~/docker/app.tar
 test:
   override:
@@ -26,4 +26,4 @@ deployment:
   prod:
     branch: master
     commands:
-      - npm docker-push
+      - npm run docker-push
