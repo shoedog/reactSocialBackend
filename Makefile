@@ -19,6 +19,13 @@ else
     DOCKER = docker run -ti $(DOCKER_ARGS) $(DOCKER_IMAGE)
 endif
 
+
+# Run tests
+
+.PHONY: tests
+tests:
+	docker run -ti $(DOCKER_ARGS) $(DOCKER_IMAGE) npm test
+
 # docker hub
 docker-build:
 	docker build -t $(DOCKER_IMAGE) .

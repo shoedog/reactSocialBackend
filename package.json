@@ -11,10 +11,7 @@
   "scripts": {
     "start": "node ./index",
     "test": "mocha --timeout 10000",
-    "validate": "npm ls",
-    "build": "make docker-build",
-    "push": "make docker-push",
-    "deploy": "make deploy"
+    "validate": "npm ls"
   },
   "repository": {
     "type": "git",
