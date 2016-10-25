@@ -24,7 +24,8 @@ endif
 
 .PHONY: tests
 tests:
-	docker run -ti $(DOCKER_ARGS) $(DOCKER_IMAGE) npm test
+	docker run -ti -e $(DOCKER_ARGS) $(DOCKER_IMAGE)
+	docker exec -ti `docker ps | grep moonwalk | awk '{print $1}'` npm test
 
 # docker hub
 docker-build:
