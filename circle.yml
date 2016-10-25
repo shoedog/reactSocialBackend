@@ -19,9 +19,6 @@ dependencies:
     - if [[ -e ~/docker/app.tar ]]; then docker load -i ~/docker/app.tar; fi
     - make docker-build
     - docker save moonwalk-backend > ~/docker/app.tar
-test:
-  override:
-    - make tests
 deployment:
   prod:
     branch: master
