@@ -29,8 +29,16 @@ exports.register = (server, options, next) => {
       method: 'GET',
       path: '/social/feed',
       config: {
+        auth: false,
+        handler: controller.list
+      }
+    },
+    {
+      method: 'GET',
+      path: '/social/feed/{id}',
+      config: {
         auth: {strategies: ['jwt', 'twitter']},
-        handler: controller.feed
+        handler: controller.read
       }
     }
   ]);

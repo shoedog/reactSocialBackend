@@ -38,6 +38,7 @@
     "joi": "6.9.0",
     "jsonwebtoken": "5.4.1",
     "mongoose": "4.2.7",
+    "request-promise": "^4.1.1",
     "shortid": "2.2.4",
     "twit": "^2.2.5"
   },

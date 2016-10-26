@@ -13,7 +13,8 @@ function socialController (db, socialKeys) {
 socialController.prototype = {
   connect,
   connectTwitter,
-  feed
+  list,
+  read
 };
 
 module.exports = socialController;
@@ -26,7 +27,31 @@ function connect (req, res) {
 }
 
 // [GET] /social/feed
-function feed (req, res) {
+function list (req, res) {
+
+  const T = new Twit({
+    consumer_key: this.socialKeys.twitter.moonwalkId,
+    consumer_secret: this.socialKeys.twitter.moonwalkSecret,
+    access_token: '4303311795-NbBXdTQD8jT6bvGn3j5xCUjISl7Wg635QSfYETC',
+    access_token_secret: 'N86Rt7iISco9pQ2JydEKvzTgxdCW07lJQRgSqPET6S4vb',
+    timeout_ms: 60*1000,
+  });
+
+  let stream = T.stream('statuses/sample')
+
+  let tweets = [];
+
+  stream.on('tweet', function (tweet) {
+    tweets.push(tweet);
+    if (tweets.length ==100) {
+      res(tweets);
+    }
+  })
+
+}
+
+// [GET] /social/feed/{id?}
+function read (req, res) {
 
   var T = new Twit({
     consumer_key: this.socialKeys.twitter.moonwalkId,
@@ -36,6 +61,9 @@ function feed (req, res) {
     timeout_ms: 60*1000,
   });
 
+  console.log(req.auth.credentials.token);
+  console.log(req.auth.credentials.secret);
+
   T.get('/statuses/home_timeline', (err, data, response) => {
     if (err) {
       res.badImplementation(err);
@@ -43,7 +71,6 @@ function feed (req, res) {
 
     res(data);
   });
-
 
 }
 
