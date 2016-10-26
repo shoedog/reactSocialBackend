@@ -42,8 +42,10 @@ function list (req, res) {
   let tweets = [];
 
   stream.on('tweet', function (tweet) {
-    tweets.push(tweet);
-    if (tweets.length ==100) {
+    if (tweet.lang == 'en') {
+      tweets.push(JSON.stringify(tweet));
+    }
+    if (tweets.length == 35) {
       res(tweets);
     }
   })
