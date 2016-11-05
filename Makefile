@@ -7,8 +7,8 @@ DOCKER_IMAGE = moonwalk-backend
 # ECS container registry (where docker image is stored).
 DOCKER_DEPLOY_IMAGE = 328619549554.dkr.ecr.us-west-2.amazonaws.com/moonwalk-backend
 
-
-# Run tests
+run:
+	docker run --name moonwalk-backend -p 5000:5000 $(DOCKER_IMAGE)
 
 .PHONY: tests
 tests:
@@ -28,4 +28,4 @@ docker-push:
 # deploy
 .PHONY: deploy
 deploy:
-	deploy/ecs-deploy.sh app app-service $(DOCKER_DEPLOY_IMAGE):$(CURRENT_VERSION)
+	deploy/ecs-deploy.sh moonwalk-backend moonwalk-backend-service $(DOCKER_DEPLOY_IMAGE):$(CURRENT_VERSION)
