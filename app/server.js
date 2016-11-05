@@ -54,6 +54,10 @@ plugins.push({
 // Use this auth strategy by default.
 server.auth.default('jwt');
 
+server.on('response', function (request) {
+    console.log(request.info.remoteAddress + ': ' + request.method.toUpperCase() + ' ' + request.url.path + ' --> ' + request.response.statusCode);
+});
+
 // up and running
 server.register(plugins, (err) => {
 	if (err) {

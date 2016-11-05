@@ -50,6 +50,7 @@ function read (req, res) {
 
 // [POST] /user
 function create (req, res) {
+  console.log(req.payload.username);
   req.payload.displayName = req.payload.username; // displayName keeps the uppercase chars
   this.model.createAsync(req.payload)
   .then((user) => {
