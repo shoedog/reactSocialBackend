@@ -41,14 +41,20 @@ function list (req, res) {
 
   let tweets = [];
 
+  function stop () {
+    stream.stop();
+  };
+
   stream.on('tweet', function (tweet) {
     if (tweet.lang == 'en') {
       tweets.push(JSON.stringify(tweet));
     }
     if (tweets.length == 35) {
+      stop();
       res(tweets);
     }
-  })
+  });
+
 
 }
 
