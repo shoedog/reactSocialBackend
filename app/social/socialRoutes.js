@@ -26,6 +26,14 @@ exports.register = (server, options, next) => {
       }
     },
     {
+      method: 'POST',
+      path: '/social/remove/twitter',
+      config: {
+        auth: {strategies: ['jwt']},
+        handler: controller.removeTwitter
+      }
+    },
+    {
       method: 'GET',
       path: '/social/feed',
       config: {
@@ -37,7 +45,7 @@ exports.register = (server, options, next) => {
       method: 'GET',
       path: '/social/feed/{id}',
       config: {
-        auth: {strategies: ['jwt', 'twitter']},
+        auth: {strategies: ['jwt']},
         handler: controller.read
       }
     }

@@ -13,6 +13,7 @@ function socialController (db, socialKeys) {
 socialController.prototype = {
   connect,
   connectTwitter,
+  removeTwitter,
   list,
   read
 };
@@ -30,8 +31,8 @@ function connect (req, res) {
 function list (req, res) {
 
   const T = new Twit({
-    consumer_key: this.socialKeys.twitter.moonwalkId,
-    consumer_secret: this.socialKeys.twitter.moonwalkSecret,
+    consumer_key: 'HBTuDkqYixOZeZIP3Uupj6gMB',
+    consumer_secret: 'V11loaak55rQAtzPsyHq4HULEfbGwEzR1ZBQidvJAS5A9xqZn5',
     access_token: '4303311795-NbBXdTQD8jT6bvGn3j5xCUjISl7Wg635QSfYETC',
     access_token_secret: 'N86Rt7iISco9pQ2JydEKvzTgxdCW07lJQRgSqPET6S4vb',
     timeout_ms: 60*1000,
@@ -55,11 +56,15 @@ function list (req, res) {
     }
   });
 
-
 }
 
 // [GET] /social/feed/{id?}
 function read (req, res) {
+
+  if (!req.auth.credentials.token) {
+    list(req, res);
+  }
+
 
   var T = new Twit({
     consumer_key: this.socialKeys.twitter.moonwalkId,
@@ -82,7 +87,44 @@ function read (req, res) {
 
 }
 
-// [GET] /social/connect/twitter
+// [POST] /social/remove/twitter/{id?}
+function removeTwitter (req, res) {
+  const id =  req.query.id;
+  this.userModel.findOne({_id: id}).populate('twitterAccount')
+  .execAsync()
+  .then((user) => {
+    if (!user) {
+      res("Error, no user");
+    }
+
+    if (user.twitterAccount) {
+      this.socialModel.findOne({_id: user.twitterAccount._id})
+      .remove()
+      .execAsync()
+      .then((success) => {
+        // remove twitter reference from user doc
+        user.twitterAccount = {};
+        // update user document
+        user.save((err, user) => {
+          if (err) {
+            res.badImplementation(err.message);
+          }
+
+          // Return so we can view.
+          res(user);
+        });
+      })
+      .catch((err) => {
+        res({error: err})
+      })
+    } else {
+      res({error: "no twitter account"})
+    }
+
+  });
+}
+
+// [GET] /social/connect/twitter/{id?}
 function connectTwitter (req, res) {
   // Once we've made it here, we have all we need.
   var id = req.auth.credentials.query.id;
@@ -95,7 +137,7 @@ function connectTwitter (req, res) {
     }
 
     if (user.twitterAccount) {
-      res("You have already connected a twitter account.")
+      res("You have already connected a twitter account.").redirect(`http://0.0.0.0:3000/profile?twitter=${user.twitterAccount.handle}`)
     }
 
     // Create a new social account mongo object
@@ -103,7 +145,7 @@ function connectTwitter (req, res) {
     s.provider = req.auth.credentials.provider;
     s.token = req.auth.credentials.token;
     s.secret = req.auth.credentials.secret;
-    s.handle = req.auth.credentials.username;
+    s.handle = req.auth.credentials.profile.username;
 
     // Save new object
     s.save((err, social) => {
@@ -121,7 +163,7 @@ function connectTwitter (req, res) {
         }
 
         // Return so we can view.
-        res(user);
+        res(user).redirect(`http://0.0.0.0:3000/profile?twitter=${user.twitterAccount.handle}`)
       })
 
     })

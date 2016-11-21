@@ -75,7 +75,8 @@ function create (req, res) {
 function login (request, reply) {
   const credentials = request.payload;
 
-  this.model.findOneAsync({username: credentials.username})
+  this.model.findOne({username: credentials.username}).populate('twitterAccount')
+  .execAsync()
   .then((user) => {
 
       // Do not specify which was incorrect (more secure this way)
