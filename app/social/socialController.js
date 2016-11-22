@@ -163,7 +163,7 @@ function connectTwitter (req, res) {
         }
 
         // Return so we can view.
-        res(user).redirect(`http://0.0.0.0:3000/profile?twitter=${user.twitterAccount.handle}`)
+        res(user).redirect(`http://0.0.0.0:3000/profile?twitter=${req.auth.credentials.profile.username}`)
       })
 
     })
