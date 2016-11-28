@@ -16,7 +16,9 @@ socialController.prototype = {
   removeTwitter,
   list,
   read,
-  post
+  post,
+  favorite,
+  retweet
 };
 
 module.exports = socialController;
@@ -104,14 +106,67 @@ function post (req, res) {
   console.log(req.auth.credentials.token);
   console.log(req.auth.credentials.secret);
 
-  //
   T.post('statuses/update', { status: req.payload.text }, function(err, data, response) {
     console.log(data, response);
     if (err) {
       res(err.message);
     }
     res(response.statusCode);
-  })
+  });
+}
+
+// [POST] /social/favorite/{id}
+function favorite (req, res) {
+  if (!req.auth.credentials.token) {
+    res.badImplementation("No connected twitter account found.");
+  }
+
+  var T = new Twit({
+    consumer_key: this.socialKeys.twitter.moonwalkId,
+    consumer_secret: this.socialKeys.twitter.moonwalkSecret,
+    access_token: req.auth.credentials.token,
+    access_token_secret: req.auth.credentials.secret,
+    timeout_ms: 60*1000,
+  });
+
+  console.log(req.auth.credentials.token);
+  console.log(req.auth.credentials.secret);
+  console.log(req.params.tweetId);
+
+  T.post('favorites/create', { id: req.params.tweetId }, function(err, data, response) {
+    // console.log(data, response);
+    if (err) {
+      res(err.message);
+    }
+    res(response.statusCode);
+  });
+}
+
+// [POST] /social/retweet/{id}
+function retweet (req, res) {
+  if (!req.auth.credentials.token) {
+    res.badImplementation("No connected twitter account found.");
+  }
+
+  var T = new Twit({
+    consumer_key: this.socialKeys.twitter.moonwalkId,
+    consumer_secret: this.socialKeys.twitter.moonwalkSecret,
+    access_token: req.auth.credentials.token,
+    access_token_secret: req.auth.credentials.secret,
+    timeout_ms: 60*1000,
+  });
+
+  console.log(req.auth.credentials.token);
+  console.log(req.auth.credentials.secret);
+  console.log(req.params.tweetId);
+
+  T.post(`statuses/retweet/${req.params.tweetId}`, function(err, data, response) {
+    // console.log(data, response);
+    if (err) {
+      res(err.message);
+    }
+    res(response.statusCode);
+  });
 }
 
 // [POST] /social/remove/twitter/{id?}

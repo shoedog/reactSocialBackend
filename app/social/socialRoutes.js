@@ -59,6 +59,22 @@ exports.register = (server, options, next) => {
         validate: Validator.post()
       }
     },
+    {
+      method: 'POST',
+      path: '/social/favorite/{tweetId}',
+      config: {
+        auth: {strategies: ['jwt']},
+        handler: controller.favorite
+      }
+    },
+    {
+      method: 'POST',
+      path: '/social/retweet/{tweetId}',
+      config: {
+        auth: {strategies: ['jwt']},
+        handler: controller.retweet
+      }
+    },
   ]);
 
 };
