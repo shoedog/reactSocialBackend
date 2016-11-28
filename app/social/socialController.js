@@ -15,7 +15,8 @@ socialController.prototype = {
   connectTwitter,
   removeTwitter,
   list,
-  read
+  read,
+  post
 };
 
 module.exports = socialController;
@@ -65,7 +66,6 @@ function read (req, res) {
     list(req, res);
   }
 
-
   var T = new Twit({
     consumer_key: this.socialKeys.twitter.moonwalkId,
     consumer_secret: this.socialKeys.twitter.moonwalkSecret,
@@ -85,6 +85,33 @@ function read (req, res) {
     res(data);
   });
 
+}
+
+// [POST] /social/post
+function post (req, res) {
+  if (!req.auth.credentials.token) {
+    res.badImplementation("No connected twitter account found.");
+  }
+
+  var T = new Twit({
+    consumer_key: this.socialKeys.twitter.moonwalkId,
+    consumer_secret: this.socialKeys.twitter.moonwalkSecret,
+    access_token: req.auth.credentials.token,
+    access_token_secret: req.auth.credentials.secret,
+    timeout_ms: 60*1000,
+  });
+
+  console.log(req.auth.credentials.token);
+  console.log(req.auth.credentials.secret);
+
+  //
+  T.post('statuses/update', { status: req.payload.text }, function(err, data, response) {
+    console.log(data, response);
+    if (err) {
+      res(err.message);
+    }
+    res(response.statusCode);
+  })
 }
 
 // [POST] /social/remove/twitter/{id?}

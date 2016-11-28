@@ -1,6 +1,7 @@
 'use strict';
 
 const Controller = require('./socialController');
+const Validator = require('./socialSchema');
 
 exports.register = (server, options, next) => {
 
@@ -48,7 +49,16 @@ exports.register = (server, options, next) => {
         auth: {strategies: ['jwt']},
         handler: controller.read
       }
-    }
+    },
+    {
+      method: 'POST',
+      path: '/social/post',
+      config: {
+        auth: {strategies: ['jwt']},
+        handler: controller.post,
+        validate: Validator.post()
+      }
+    },
   ]);
 
 };
