@@ -19,7 +19,8 @@ socialController.prototype = {
   post,
   favorite,
   unfavorite,
-  retweet
+  retweet,
+  unretweet
 };
 
 module.exports = socialController;
@@ -189,6 +190,33 @@ function retweet (req, res) {
   console.log(req.params.tweetId);
 
   T.post(`statuses/retweet/${req.params.tweetId}`, function(err, data, response) {
+    // console.log(data, response);
+    if (err) {
+      res(err.message);
+    }
+    res(response.statusCode);
+  });
+}
+
+// [POST] /social/unretweet/{id}
+function unretweet (req, res) {
+  if (!req.auth.credentials.token) {
+    res.badImplementation("No connected twitter account found.");
+  }
+
+  var T = new Twit({
+    consumer_key: this.socialKeys.twitter.moonwalkId,
+    consumer_secret: this.socialKeys.twitter.moonwalkSecret,
+    access_token: req.auth.credentials.token,
+    access_token_secret: req.auth.credentials.secret,
+    timeout_ms: 60*1000,
+  });
+
+  console.log(req.auth.credentials.token);
+  console.log(req.auth.credentials.secret);
+  console.log(req.params.tweetId);
+
+  T.post(`statuses/unretweet/${req.params.tweetId}`, function(err, data, response) {
     // console.log(data, response);
     if (err) {
       res(err.message);

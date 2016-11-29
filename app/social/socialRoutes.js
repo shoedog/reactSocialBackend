@@ -83,6 +83,14 @@ exports.register = (server, options, next) => {
         handler: controller.retweet
       }
     },
+    {
+      method: 'POST',
+      path: '/social/unretweet/{tweetId}',
+      config: {
+        auth: {strategies: ['jwt']},
+        handler: controller.unretweet
+      }
+    },
   ]);
 
 };
