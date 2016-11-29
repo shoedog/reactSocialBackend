@@ -69,6 +69,14 @@ exports.register = (server, options, next) => {
     },
     {
       method: 'POST',
+      path: '/social/unfavorite/{tweetId}',
+      config: {
+        auth: {strategies: ['jwt']},
+        handler: controller.unfavorite
+      }
+    },
+    {
+      method: 'POST',
       path: '/social/retweet/{tweetId}',
       config: {
         auth: {strategies: ['jwt']},
