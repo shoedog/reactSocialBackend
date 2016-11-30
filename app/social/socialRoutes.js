@@ -91,6 +91,14 @@ exports.register = (server, options, next) => {
         handler: controller.unretweet
       }
     },
+    {
+      method: ['GET', 'POST'],
+      path: '/social/stream/{keyword}',
+      config: {
+        auth: false,
+        handler: controller.searchStream
+      }
+    },
   ]);
 
 };

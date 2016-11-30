@@ -1,6 +1,7 @@
 // app/social/socialController.js
 'use strict';
 const Twit = require('twit');
+const sentiment = require('sentiment');
 
 
 // Will add prototypes to this.
@@ -20,7 +21,8 @@ socialController.prototype = {
   favorite,
   unfavorite,
   retweet,
-  unretweet
+  unretweet,
+  searchStream
 };
 
 module.exports = socialController;
@@ -311,4 +313,52 @@ function connectTwitter (req, res) {
     res.badImplementation(err.message);
   });
 
+}
+
+// [GET] /social/stream/{keyword}
+function searchStream (req, res) {
+
+  console.log(req.params.keyword);
+
+  const T = new Twit({
+    consumer_key: 'HBTuDkqYixOZeZIP3Uupj6gMB',
+    consumer_secret: 'V11loaak55rQAtzPsyHq4HULEfbGwEzR1ZBQidvJAS5A9xqZn5',
+    access_token: '4303311795-NbBXdTQD8jT6bvGn3j5xCUjISl7Wg635QSfYETC',
+    access_token_secret: 'N86Rt7iISco9pQ2JydEKvzTgxdCW07lJQRgSqPET6S4vb',
+    timeout_ms: 60*1000,
+  });
+
+  let stream = T.stream('statuses/filter', { track: req.params.keyword });
+  let tweets = [];
+  let totalScore = 0;
+  let minScore = 0;
+  let highScore = 0;
+
+  function stop () {
+    stream.stop();
+  };
+
+  stream.on('tweet', function (tweet) {
+
+    const score = sentiment(tweet.text);
+    console.log(score.score);
+    totalScore += score.score;
+    if (score.score > highScore) {
+      highScore = score.score;
+    }
+
+    if (score.score < minScore) {
+      minScore = score.score;
+    }
+
+    if (tweet.lang == 'en') {
+      tweets.push(JSON.stringify(tweet));
+    }
+    if (tweets.length == 20) {
+      stop();
+      console.log("overall sentiment: ", totalScore);
+      const payload = { overall: totalScore, polar: Math.abs(highScore - minScore), tweets: tweets };
+      res(payload);
+    }
+  });
 }
