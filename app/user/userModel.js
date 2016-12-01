@@ -52,6 +52,8 @@ var UserSchema = new Schema({
     default: shortid.generate
   },
 
+  profilePic: { type: String},
+
   twitterAccount: {type : Schema.Types.ObjectId, ref : 'Social'},
 
   loginAttempts: { type: Number, required: true, default: 0},

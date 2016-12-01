@@ -268,7 +268,7 @@ function removeTwitter (req, res) {
 function connectTwitter (req, res) {
   // Once we've made it here, we have all we need.
   var id = req.auth.credentials.query.id;
-  //console.log(id);
+  console.log(req.auth.credentials);
   this.userModel.findOne({_id: id}).populate('twitterAccount')
   .execAsync()
   .then((user) => {
@@ -286,6 +286,7 @@ function connectTwitter (req, res) {
     s.token = req.auth.credentials.token;
     s.secret = req.auth.credentials.secret;
     s.handle = req.auth.credentials.profile.username;
+    s.pic = req.auth.credentials.profile.raw.profile_image_url;
 
     // Save new object
     s.save((err, social) => {
@@ -295,6 +296,7 @@ function connectTwitter (req, res) {
 
       // Once succesfully saved, push it to user document.
       user.twitterAccount = social._id;
+      user.profilePic = req.auth.credentials.profile.raw.profile_image_url;
 
       // Save user.
       user.save((err, user) => {

@@ -16,6 +16,9 @@ var socialSchema = new mongoose.Schema({
   },
   handle: {
     type: String
+  },
+  pic: {
+    type: String
   }
 
 });
