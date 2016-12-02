@@ -344,6 +344,7 @@ function searchStreamSentiment (req, res) {
     let totalScore = 0;
     let minScore = 0;
     let highScore = 0;
+    let count = 0;
 
     const sentiments = data.statuses.map((tweet) => {
       const score = sentiment(tweet.text);
@@ -358,15 +359,18 @@ function searchStreamSentiment (req, res) {
       if (score.score < minScore) {
         minScore = score.score;
       }
+      count += 1;
       return tweet;
     });
 
     const avg = totalScore / 100;
     const diff = Math.abs(highScore - minScore);
 
-    const payload = { response, overall: avg, polar: diff, tweets: sentiments };
+    const payload = { overall: totalScore, average: avg, polar: diff, tweets: sentiments };
 
-    res({ payload });
+    console.log(count);
+
+    res(payload);
   });
 }
 
@@ -390,7 +394,7 @@ function searchStream (req, res) {
     if (err) {
       res.badImplementation(err);
     }
-    res({ response, data });
+    res(data);
   });
 }
 
