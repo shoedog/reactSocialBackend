@@ -333,38 +333,40 @@ function searchStreamSentiment (req, res) {
     timeout_ms: 60*1000,
   });
 
-  let stream = T.stream('statuses/filter', { track: req.params.keyword });
-  let tweets = [];
-  let totalScore = 0;
-  let minScore = 0;
-  let highScore = 0;
+  const startDate = moment().subtract(1, "days").format('YYYY-MM-DD');
+  const searchTerms = req.params.keyword + ' since:' + startDate;
 
-  function stop () {
-    stream.stop();
-  };
-
-  stream.on('tweet', function (tweet) {
-
-    const score = sentiment(tweet.text);
-    console.log(score.score);
-    totalScore += score.score;
-    if (score.score > highScore) {
-      highScore = score.score;
+  T.get('search/tweets', { q: searchTerms, count: 100 }, function(err, data, response) {
+    if (err) {
+      res.badImplementation(err);
     }
 
-    if (score.score < minScore) {
-      minScore = score.score;
-    }
+    let totalScore = 0;
+    let minScore = 0;
+    let highScore = 0;
 
-    if (tweet.lang == 'en') {
-      tweets.push(JSON.stringify(tweet));
-    }
-    if (tweets.length == 20) {
-      stop();
-      console.log("overall sentiment: ", totalScore);
-      const payload = { overall: totalScore, polar: Math.abs(highScore - minScore), tweets: tweets };
-      res(payload);
-    }
+    const sentiments = data.statuses.map((tweet) => {
+      const score = sentiment(tweet.text);
+      tweet.moonwalkScore = score;
+      console.log(tweet.moonwalkScore);
+      totalScore += tweet.moonwalkScore.score;
+
+      if (score.score > highScore) {
+        highScore = score.score;
+      }
+
+      if (score.score < minScore) {
+        minScore = score.score;
+      }
+      return tweet;
+    });
+
+    const avg = totalScore / 100;
+    const diff = Math.abs(highScore - minScore);
+
+    const payload = { response, overall: avg, polar: diff, tweets: sentiments };
+
+    res({ payload });
   });
 }
 
@@ -382,7 +384,6 @@ function searchStream (req, res) {
   });
 
   const startDate = moment().subtract(1, "days").format('YYYY-MM-DD');
-
   const searchTerms = req.params.keyword + ' since:' + startDate;
   console.log(searchTerms);
   T.get('search/tweets', { q: searchTerms, count: 100 }, function(err, data, response) {
@@ -390,8 +391,7 @@ function searchStream (req, res) {
       res.badImplementation(err);
     }
     res({ response, data });
-  })
-
+  });
 }
 
 // [GET] /social/trends/available
