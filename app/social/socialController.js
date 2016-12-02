@@ -2,7 +2,7 @@
 'use strict';
 const Twit = require('twit');
 const sentiment = require('sentiment');
-
+const moment = require('moment');
 
 // Will add prototypes to this.
 function socialController (db, socialKeys) {
@@ -381,25 +381,17 @@ function searchStream (req, res) {
     timeout_ms: 60*1000,
   });
 
-  let stream = T.stream('statuses/filter', { track: req.params.keyword });
-  let tweets = [];
+  const startDate = moment().subtract(1, "days").format('YYYY-MM-DD');
 
-  function stop () {
-    stream.stop();
-  };
-
-  stream.on('tweet', function (tweet) {
-
-    if (tweet.lang == 'en') {
-      tweets.push(JSON.stringify(tweet));
+  const searchTerms = req.params.keyword + ' since:' + startDate;
+  console.log(searchTerms);
+  T.get('search/tweets', { q: searchTerms, count: 100 }, function(err, data, response) {
+    if (err) {
+      res.badImplementation(err);
     }
-    if (tweets.length == 20) {
-      stop();
+    res({ response, data });
+  })
 
-      const payload = {  tweets: tweets };
-      res(payload);
-    }
-  });
 }
 
 // [GET] /social/trends/available
