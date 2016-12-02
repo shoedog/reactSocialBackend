@@ -22,7 +22,8 @@ socialController.prototype = {
   unfavorite,
   retweet,
   unretweet,
-  searchStream
+  searchStream,
+  searchStreamSentiment
 };
 
 module.exports = socialController;
@@ -317,8 +318,8 @@ function connectTwitter (req, res) {
 
 }
 
-// [GET] /social/stream/{keyword}
-function searchStream (req, res) {
+// [GET] /social/sentiment/{keyword}
+function searchStreamSentiment (req, res) {
 
   console.log(req.params.keyword);
 
@@ -360,6 +361,40 @@ function searchStream (req, res) {
       stop();
       console.log("overall sentiment: ", totalScore);
       const payload = { overall: totalScore, polar: Math.abs(highScore - minScore), tweets: tweets };
+      res(payload);
+    }
+  });
+}
+
+// [GET] /social/stream/{keyword}
+function searchStream (req, res) {
+
+  console.log(req.params.keyword);
+
+  const T = new Twit({
+    consumer_key: 'HBTuDkqYixOZeZIP3Uupj6gMB',
+    consumer_secret: 'V11loaak55rQAtzPsyHq4HULEfbGwEzR1ZBQidvJAS5A9xqZn5',
+    access_token: '4303311795-NbBXdTQD8jT6bvGn3j5xCUjISl7Wg635QSfYETC',
+    access_token_secret: 'N86Rt7iISco9pQ2JydEKvzTgxdCW07lJQRgSqPET6S4vb',
+    timeout_ms: 60*1000,
+  });
+
+  let stream = T.stream('statuses/filter', { track: req.params.keyword });
+  let tweets = [];
+
+  function stop () {
+    stream.stop();
+  };
+
+  stream.on('tweet', function (tweet) {
+
+    if (tweet.lang == 'en') {
+      tweets.push(JSON.stringify(tweet));
+    }
+    if (tweets.length == 20) {
+      stop();
+      
+      const payload = {  tweets: tweets };
       res(payload);
     }
   });

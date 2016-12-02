@@ -93,6 +93,14 @@ exports.register = (server, options, next) => {
     },
     {
       method: ['GET', 'POST'],
+      path: '/social/sentiment/{keyword}',
+      config: {
+        auth: false,
+        handler: controller.searchStreamSentiment
+      }
+    },
+    {
+      method: ['GET', 'POST'],
       path: '/social/stream/{keyword}',
       config: {
         auth: false,
