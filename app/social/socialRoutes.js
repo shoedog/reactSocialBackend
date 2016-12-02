@@ -107,6 +107,22 @@ exports.register = (server, options, next) => {
         handler: controller.searchStream
       }
     },
+    {
+      method: ['GET', 'POST'],
+      path: '/social/trends/available',
+      config: {
+        auth: false,
+        handler: controller.trendsAvailable
+      }
+    },
+    {
+      method: ['GET', 'POST'],
+      path: '/social/trends/place/{id}',
+      config: {
+        auth: false,
+        handler: controller.trendsPlace
+      }
+    },
   ]);
 
 };

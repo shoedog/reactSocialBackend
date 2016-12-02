@@ -23,7 +23,9 @@ socialController.prototype = {
   retweet,
   unretweet,
   searchStream,
-  searchStreamSentiment
+  searchStreamSentiment,
+  trendsAvailable,
+  trendsPlace
 };
 
 module.exports = socialController;
@@ -393,9 +395,49 @@ function searchStream (req, res) {
     }
     if (tweets.length == 20) {
       stop();
-      
+
       const payload = {  tweets: tweets };
       res(payload);
     }
+  });
+}
+
+// [GET] /social/trends/available
+function trendsAvailable (req, res) {
+
+  const T = new Twit({
+    consumer_key: 'HBTuDkqYixOZeZIP3Uupj6gMB',
+    consumer_secret: 'V11loaak55rQAtzPsyHq4HULEfbGwEzR1ZBQidvJAS5A9xqZn5',
+    access_token: '4303311795-NbBXdTQD8jT6bvGn3j5xCUjISl7Wg635QSfYETC',
+    access_token_secret: 'N86Rt7iISco9pQ2JydEKvzTgxdCW07lJQRgSqPET6S4vb',
+    timeout_ms: 60*1000,
+  });
+
+  T.get('trends/available', function(err, data, response) {
+    if (err) {
+      console.log(err);
+      res.badImplementation(err);
+    }
+    res(data);
+  });
+}
+
+// [GET] /social/trends/place/{id}
+function trendsPlace (req, res) {
+
+  const T = new Twit({
+    consumer_key: 'HBTuDkqYixOZeZIP3Uupj6gMB',
+    consumer_secret: 'V11loaak55rQAtzPsyHq4HULEfbGwEzR1ZBQidvJAS5A9xqZn5',
+    access_token: '4303311795-NbBXdTQD8jT6bvGn3j5xCUjISl7Wg635QSfYETC',
+    access_token_secret: 'N86Rt7iISco9pQ2JydEKvzTgxdCW07lJQRgSqPET6S4vb',
+    timeout_ms: 60*1000,
+  });
+
+  T.get('trends/place', { id: req.params.id, language: 'en' }, function(err, data, response) {
+    if (err) {
+      console.log(err);
+      res.badImplementation(err);
+    }
+    res(data);
   });
 }
