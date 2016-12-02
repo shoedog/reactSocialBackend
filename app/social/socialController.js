@@ -320,6 +320,16 @@ function connectTwitter (req, res) {
 
 }
 
+var myNamespace = {};
+
+myNamespace.round = function(number, precision) {
+  var factor = Math.pow(10, precision);
+  var tempNumber = number * factor;
+  var roundedTempNumber = Math.round(tempNumber);
+  return roundedTempNumber / factor;
+};
+
+
 // [GET] /social/sentiment/{keyword}
 function searchStreamSentiment (req, res) {
 
@@ -344,6 +354,10 @@ function searchStreamSentiment (req, res) {
     let totalScore = 0;
     let minScore = 0;
     let highScore = 0;
+    let positiveCount = 0;
+    let negativeCount = 0;
+    let posTotal = 0;
+    let negTotal = 0;
     let count = 0;
 
     const sentiments = data.statuses.map((tweet) => {
@@ -356,6 +370,16 @@ function searchStreamSentiment (req, res) {
         highScore = score.score;
       }
 
+      if (score.score > 0 ) {
+        positiveCount += 1;
+        posTotal += score.score;
+      }
+
+      if (score.score < 0 ) {
+        negativeCount += 1;
+        negTotal += score.score;
+      }
+
       if (score.score < minScore) {
         minScore = score.score;
       }
@@ -363,10 +387,24 @@ function searchStreamSentiment (req, res) {
       return tweet;
     });
 
-    const avg = totalScore / 100;
+    const avg = myNamespace.round((totalScore / 100), 2);
     const diff = Math.abs(highScore - minScore);
+    const negAvg = myNamespace.round((negTotal / negativeCount), 2);
+    const posAvg = myNamespace.round((posTotal / positiveCount), 2);
 
-    const payload = { overall: totalScore, average: avg, polar: diff, tweets: sentiments };
+
+    const payload = {
+      overall: totalScore,
+      average: avg,
+      polar: diff,
+      pos: positiveCount,
+      posAvg: posAvg,
+      posMax: highScore,
+      neg: negativeCount,
+      negAvg: negAvg,
+      negMax: minScore,
+      tweets: sentiments
+    };
 
     console.log(count);
 
