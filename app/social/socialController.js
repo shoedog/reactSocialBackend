@@ -280,7 +280,7 @@ function connectTwitter (req, res) {
     }
 
     if (user.twitterAccount) {
-      res("You have already connected a twitter account.").redirect(`http://localhost:3000/profile?twitter=${user.twitterAccount.handle}`)
+      res("You have already connected a twitter account.").redirect(`http://54.212.196.159:3000/profile?twitter=${user.twitterAccount.handle}`)
     }
 
     // Create a new social account mongo object
@@ -308,7 +308,7 @@ function connectTwitter (req, res) {
         }
 
         // Return so we can view.
-        res(user).redirect(`http://localhost:3000/profile?twitter=${req.auth.credentials.profile.username}`)
+        res(user).redirect(`http://54.212.196.159:3000/profile?twitter=${req.auth.credentials.profile.username}`)
       })
 
     })
