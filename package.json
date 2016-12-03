@@ -35,7 +35,7 @@
     "hapi": "11.1.2",
     "hapi-auth-jwt2": "5.2.1",
     "hapi-boom-decorators": "1.0.2",
-    "joi": "6.9.0",
+    "joi": "10.0.2",
     "jsonwebtoken": "5.4.1",
     "moment": "^2.17.0",
     "mongoose": "4.2.7",

@@ -82,12 +82,20 @@ UserSchema.statics.failedLogin = {
 // same as for saving
 UserSchema.pre('findOneAndUpdate', function () {
   const password = generateHash(this.getUpdate().$set.password);
+  const email = this.getUpdate().$set.email;
+  let args = {};
 
-  if (!password) {
-    return;
+  console.log(this.getUpdate())
+
+  if (password) {
+    args.password = password;
   }
 
-  this.findOneAndUpdate({}, {password: password, email: email});
+  if (email) {
+    args.email = email;
+  }
+
+  this.findOneAndUpdate({}, args);
 });
 
 // validate password
